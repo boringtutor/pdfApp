@@ -410,16 +410,21 @@
             // uploadFile(file,file.type)
             //append the data to the list ot upload from the list
             list.push(file);
-            //addData(file);
+            addData(file);
 
          }
 
          var i = 0;
+         var uploaders = []
          function onUploadComplete(){
-             console.log('uploading....');
+            console.log('uploading....');
+            //create loaders to find out when all the uploads are completed
+            
             for (i=0;i<list.length;i++){
                 var file = list[i];
+                uploaders.push(i);
                 uploadFile(file,file.type);
+                
             }
          }
          //adding data to table....
@@ -450,14 +455,15 @@
             .then((url) => {
                 console.log(url);
                 strurl = url;
+                uploaders.pop();
                 databaseref.child('pdfs').set({
                 user: 'anonomus',
                 pdfurl: url,
-            })
-            .then(()=>{
-                addData(file);
             });
-
+            
+            if(uploaders.length == 0){
+                console.log('upload completed ... ');
+            }
             //document.querySelector('#someImageTagID').src = url;
             })
                 .catch(console.error);
@@ -466,11 +472,11 @@
             //listening to merge...
             $('.merge').click(()=>{
                 if(list.length <2){
-                    console.log('need atleast two files to merge');
+                    console.log('cannot merge 1 or less then 1 file');
                 }
                 else{
                     console.log('merginggg....');
-                    
+                    onUploadComplete();
                 }
                 
             });
@@ -554,7 +560,6 @@
                                 //ajaxData.append(input.getAttribute('name'), file);
                                 form.classList.remove('is-uploading');
                             });
-                            onUploadComplete(form);
                         }
                     } else // fallback Ajax solution upload for older browsers
                     {
