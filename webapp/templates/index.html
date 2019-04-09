@@ -332,6 +332,14 @@
      background-color: #0f3c4b;
      }
 
+     .mergeContainer{
+         width:100%;
+         background-color: #0f3c4b;
+     }
+     .merge{
+         width:100%;
+
+     }
 
 
 
@@ -359,6 +367,9 @@
          </form>
     </div>
     
+    <div class="mergeContainer">
+        <button class="merge">merge</button>
+    </div>
     
     <div class="displayFilesToUpload">
         <table id="table">
@@ -452,6 +463,17 @@
                 .catch(console.error);
             }
 
+            //listening to merge...
+            $('.merge').click(()=>{
+                if(list.length <2){
+                    console.log('need atleast two files to merge');
+                }
+                else{
+                    console.log('merginggg....');
+                    
+                }
+                
+            });
         (function (document, window, index) {
             // feature detection for drag&drop upload
             var isAdvancedUpload = function () {
