@@ -341,7 +341,40 @@
 
      }
 
-
+    .loading{
+        height:20%;
+        width:100%;
+        color:whitesmoke;
+        background-color: #007bff;
+        display:block;
+    }
+    .message{
+        height:20%;
+        width:100%;
+        color:whitesmoke;
+        background-color: #28a745;
+        display: none;
+    }
+    .error{
+        height:20%;
+        width:100%;
+        color:whitesmoke;
+        background-color: #dc3545;
+        display: none;
+    }
+    .msg{
+        padding: 2%;
+    }
+     #loading{
+        display:none;
+     }
+   /* 
+    #message{
+        display: none;
+    }
+    #error{
+        display: none;
+    } */
 
 
 
@@ -353,6 +386,10 @@
         <h1 class="title">Pdf Merger</h1>
     </div>
     </br>
+    <div  id="loading"><div class="msg">loading...</div></div>
+    <div class="message" id="message"><div class="msg">uploading Complete....</div></div>
+    <div class="error" id="error"><div class="msg">error occured while uploading,make sure internet connection is stable or you are not trying to upload 1 or less then 1
+    file.....</div></div>
     <div class="submit">
          <form class="box" method="post" action="" enctype="multipart/form-data">
              <div class="box__input">
@@ -471,15 +508,63 @@
 
             //listening to merge...
             $('.merge').click(()=>{
-                if(list.length <2){
+                /* if(list.length <2){
                     console.log('cannot merge 1 or less then 1 file');
                 }
                 else{
                     console.log('merginggg....');
                     onUploadComplete();
-                }
+                } */
+                //testing errors and other alerts
+                Alert();
                 
             });
+
+            function Alert(){
+                showLoading();
+                //showError();
+                //showMessage();
+                //hideMessage();
+                //hideLoading();
+               // hideError();                
+            }
+            
+            function showLoading(){
+                /* var x = document.getElementById("loading");
+                x.style.display = "block";
+                console.log(x); */
+                var x = document.getElementById('loading');
+                $(x).removeAttr('id').addClass("loading");
+                console.log(x);
+            }
+            function showError(){
+                var x = document.getElementById("error");
+                x.style.display = "block";
+                console.log(x);
+            }
+
+            function showMessage(){
+                var x = document.getElementById("message");
+                x.style.display = "block";
+
+            }
+            function hideMessage(){
+                var x = document.getElementById("message");
+                x.style.display = "block";
+
+            }
+
+            function hideLoading() {
+                var x = document.getElementById("loading");
+                x.style.display = "none";
+                console.log(x);
+            }
+            function hideError() {
+                var x = document.getElementById("error");
+                x.style.display = "none";
+                console.log(x);
+            }
+
         (function (document, window, index) {
             // feature detection for drag&drop upload
             var isAdvancedUpload = function () {
