@@ -29,7 +29,7 @@
 <!-- <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-storage.js"></script> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
     body{
         background-color: rgb(248, 248, 248);
@@ -353,14 +353,14 @@
         width:100%;
         color:whitesmoke;
         background-color: #28a745;
-        display: none;
+        display: block;
     }
     .error{
         height:20%;
         width:100%;
         color:whitesmoke;
         background-color: #dc3545;
-        display: none;
+        display: block;
     }
     .msg{
         padding: 2%;
@@ -368,13 +368,12 @@
      #loading{
         display:none;
      }
-   /* 
-    #message{
+     #message{
         display: none;
-    }
-    #error{
+     }
+     #error{
         display: none;
-    } */
+     }
 
 
 
@@ -386,10 +385,10 @@
         <h1 class="title">Pdf Merger</h1>
     </div>
     </br>
-    <div  id="loading"><div class="msg">loading...</div></div>
-    <div class="message" id="message"><div class="msg">uploading Complete....</div></div>
-    <div class="error" id="error"><div class="msg">error occured while uploading,make sure internet connection is stable or you are not trying to upload 1 or less then 1
-    file.....</div></div>
+    <div id="loading"><div class="msg">loading...</div></div>
+    <div id="message"><div class="msg">uploading Complete....</div></div>
+    <div id="error"><div class="msg">error occured while uploading,make sure internet connection is stable or you are not trying to upload 1 or less then 1
+    file.....</div></div> 
     <div class="submit">
          <form class="box" method="post" action="" enctype="multipart/form-data">
              <div class="box__input">
@@ -453,14 +452,14 @@
 
          var i = 0;
          var uploaders = []
-         function onUploadComplete(){
+         function onUploadComplete(x){
             console.log('uploading....');
             //create loaders to find out when all the uploads are completed
             
             for (i=0;i<list.length;i++){
                 var file = list[i];
                 uploaders.push(i);
-                uploadFile(file,file.type);
+                uploadFile(file,file.type,x);
                 
             }
          }
@@ -480,7 +479,7 @@
             rowCount = rowCount + 1;
          }
 
-         function uploadFile(file,type){
+         function uploadFile(file,type,x){
             const metadata = {
                 contentType: type
             };
@@ -492,14 +491,16 @@
             .then((url) => {
                 console.log(url);
                 strurl = url;
-                uploaders.pop();
-                databaseref.child('pdfs').set({
+                databaseref.child('pdfs').child(uploaders.length).set({
                 user: 'anonomus',
                 pdfurl: url,
             });
+                uploaders.pop();
             
             if(uploaders.length == 0){
                 console.log('upload completed ... ');
+                hideLoading(x);
+                showMessage();
             }
             //document.querySelector('#someImageTagID').src = url;
             })
@@ -508,21 +509,24 @@
 
             //listening to merge...
             $('.merge').click(()=>{
-                /* if(list.length <2){
+                var x = showLoading();
+                if(list.length <2){
                     console.log('cannot merge 1 or less then 1 file');
+                    hideLoading(x);
+                    showError();
                 }
                 else{
                     console.log('merginggg....');
-                    onUploadComplete();
-                } */
+                    onUploadComplete(x);
+                } 
                 //testing errors and other alerts
-                Alert();
+               // Alert();
                 
             });
 
             function Alert(){
-                showLoading();
-                //showError();
+                //showLoading();
+                showError();
                 //showMessage();
                 //hideMessage();
                 //hideLoading();
@@ -530,39 +534,45 @@
             }
             
             function showLoading(){
-                /* var x = document.getElementById("loading");
-                x.style.display = "block";
-                console.log(x); */
-                var x = document.getElementById('loading');
-                $(x).removeAttr('id').addClass("loading");
-                console.log(x);
+                
+                let x = document.getElementById('loading');
+                $(x).removeAttr('id').addClass("loading").addClass("w3-animate-top");
+               /*  setTimeout(function () {
+                    hideLoading(x);
+                }, 5000); */
+                return x;
             }
             function showError(){
-                var x = document.getElementById("error");
-                x.style.display = "block";
+
+                let x = document.getElementById("error");
                 console.log(x);
+                $(x).removeAttr('id').addClass("error").addClass("w3-animate-top");
+                setTimeout(function () {
+                    hideError(x);
+                }, 5000);
             }
 
             function showMessage(){
-                var x = document.getElementById("message");
-                x.style.display = "block";
+                let x = document.getElementById("message");
+                $(x).removeAttr('id').addClass("message").addClass("w3-animate-top");
+                setTimeout(function () { 
+                    hideMessage(x); 
+                    }, 5000);
 
             }
-            function hideMessage(){
-                var x = document.getElementById("message");
-                x.style.display = "block";
-
-            }
-
-            function hideLoading() {
-                var x = document.getElementById("loading");
-                x.style.display = "none";
+            function hideMessage(x){
+                console.log('hide is called');
+                console.log(x);
+                $(x).removeAttr('class').attr('id','message');
                 console.log(x);
             }
-            function hideError() {
-                var x = document.getElementById("error");
-                x.style.display = "none";
-                console.log(x);
+
+            function hideLoading(x) {
+                $(x).removeAttr('class').attr('id', 'loading');
+                
+            }
+            function hideError(x) {
+               $(x).removeAttr('class').attr('id', 'error');
             }
 
         (function (document, window, index) {
