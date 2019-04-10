@@ -452,14 +452,14 @@
 
          var i = 0;
          var uploaders = []
-         function onUploadComplete(){
+         function onUploadComplete(x){
             console.log('uploading....');
             //create loaders to find out when all the uploads are completed
             
             for (i=0;i<list.length;i++){
                 var file = list[i];
                 uploaders.push(i);
-                uploadFile(file,file.type);
+                uploadFile(file,file.type,x);
                 
             }
          }
@@ -479,7 +479,7 @@
             rowCount = rowCount + 1;
          }
 
-         function uploadFile(file,type){
+         function uploadFile(file,type,x){
             const metadata = {
                 contentType: type
             };
@@ -491,14 +491,15 @@
             .then((url) => {
                 console.log(url);
                 strurl = url;
-                uploaders.pop();
-                databaseref.child('pdfs').set({
+                databaseref.child('pdfs').child(uploaders.length).set({
                 user: 'anonomus',
                 pdfurl: url,
             });
+                uploaders.pop();
             
             if(uploaders.length == 0){
                 console.log('upload completed ... ');
+                hideLoading(x);
                 showMessage();
             }
             //document.querySelector('#someImageTagID').src = url;
@@ -508,25 +509,25 @@
 
             //listening to merge...
             $('.merge').click(()=>{
-                //showLoading();
-                /* if(list.length <2){
+                var x = showLoading();
+                if(list.length <2){
                     console.log('cannot merge 1 or less then 1 file');
-                    hideLoading();
+                    hideLoading(x);
                     showError();
                 }
                 else{
                     console.log('merginggg....');
-                    onUploadComplete();
-                } */
+                    onUploadComplete(x);
+                } 
                 //testing errors and other alerts
-                Alert();
+               // Alert();
                 
             });
 
             function Alert(){
                 //showLoading();
-                //showError();
-                showMessage();
+                showError();
+                //showMessage();
                 //hideMessage();
                 //hideLoading();
                // hideError();                
@@ -536,38 +537,42 @@
                 
                 let x = document.getElementById('loading');
                 $(x).removeAttr('id').addClass("loading").addClass("w3-animate-top");
-                console.log(x);
+               /*  setTimeout(function () {
+                    hideLoading(x);
+                }, 5000); */
+                return x;
             }
             function showError(){
 
                 let x = document.getElementById("error");
                 console.log(x);
                 $(x).removeAttr('id').addClass("error").addClass("w3-animate-top");
-                console.log(x);
+                setTimeout(function () {
+                    hideError(x);
+                }, 5000);
             }
 
             function showMessage(){
                 let x = document.getElementById("message");
                 $(x).removeAttr('id').addClass("message").addClass("w3-animate-top");
-                setTimeout(function () { hideMessage(); }, 5000);
+                setTimeout(function () { 
+                    hideMessage(x); 
+                    }, 5000);
 
             }
-            function hideMessage(){
+            function hideMessage(x){
                 console.log('hide is called');
-                var x = document.getElementById("message");
+                console.log(x);
                 $(x).removeAttr('class').attr('id','message');
                 console.log(x);
             }
 
-            function hideLoading() {
-                var x = document.getElementById("loading");
-                x.style.display = "none";
-                console.log(x);
+            function hideLoading(x) {
+                $(x).removeAttr('class').attr('id', 'loading');
+                
             }
-            function hideError() {
-                var x = document.getElementById("error");
-                x.style.display = "none";
-                console.log(x);
+            function hideError(x) {
+               $(x).removeAttr('class').attr('id', 'error');
             }
 
         (function (document, window, index) {
