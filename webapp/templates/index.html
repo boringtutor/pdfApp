@@ -29,7 +29,7 @@
 <!-- <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-storage.js"></script> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
     body{
         background-color: rgb(248, 248, 248);
@@ -499,6 +499,7 @@
             
             if(uploaders.length == 0){
                 console.log('upload completed ... ');
+                showMessage();
             }
             //document.querySelector('#someImageTagID').src = url;
             })
@@ -507,8 +508,11 @@
 
             //listening to merge...
             $('.merge').click(()=>{
+                //showLoading();
                 /* if(list.length <2){
                     console.log('cannot merge 1 or less then 1 file');
+                    hideLoading();
+                    showError();
                 }
                 else{
                     console.log('merginggg....');
@@ -520,8 +524,8 @@
             });
 
             function Alert(){
-                showLoading();
-                showError();
+                //showLoading();
+                //showError();
                 showMessage();
                 //hideMessage();
                 //hideLoading();
@@ -529,31 +533,30 @@
             }
             
             function showLoading(){
-                /* var x = document.getElementById("loading");
-                x.style.display = "block";
-                console.log(x); */
+                
                 let x = document.getElementById('loading');
-                $(x).removeAttr('id').addClass("loading");
+                $(x).removeAttr('id').addClass("loading").addClass("w3-animate-top");
                 console.log(x);
             }
             function showError(){
 
                 let x = document.getElementById("error");
                 console.log(x);
-                $(x).removeAttr('id').addClass("error");
+                $(x).removeAttr('id').addClass("error").addClass("w3-animate-top");
                 console.log(x);
             }
 
             function showMessage(){
                 let x = document.getElementById("message");
-                $(x).removeAttr('id').addClass("message");
-                
+                $(x).removeAttr('id').addClass("message").addClass("w3-animate-top");
+                setTimeout(function () { hideMessage(); }, 5000);
 
             }
             function hideMessage(){
+                console.log('hide is called');
                 var x = document.getElementById("message");
-                x.style.display = "block";
-
+                $(x).removeAttr('class').attr('id','message');
+                console.log(x);
             }
 
             function hideLoading() {
