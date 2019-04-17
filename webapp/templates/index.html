@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Pdf Merger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--     <link rel="stylesheet" type="text/css" media="screen" href="main.css">
+    <script src="main.js"></script>
+ --> 
+
+                        <!-- BootStrap-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+
+<!-- Firebase App is always required and must be first -->
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
+
+<!-- Add additional services that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-messaging.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-functions.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.9.3/firebase.js"></script>
+
+<!-- Comment out (or don't include) services that you don't want to use -->
+<!-- <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-storage.js"></script> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+    body{
+        background-color: rgb(248, 248, 248);
+        display: flex;
+        flex-direction: column;
+        margin: 0%;
+    }
+    .navbar{
+        display: flex;
+        background-color: rgb(50, 50, 63);
+        min-height: 10vh;
+        color:white;
+        min-width: 100%;
+    }
+    .title{
+        margin-left: 3%;
+    }
+    
+    .submit{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height:40vh;
+        background-color: #c8dadf;
+    }
+    .file-select{
+        background-color: white;
+    }
+    .header{
+        background-color: #000000;
+        color:white;
+    }
+    .header1{
+        background-color: white;
+        color:black;
+    }
+    table{
+        display: flex;
+        flex-direction: column;
+
+    }
+    td{
+        min-width: 40vh;   
+        padding:1%;
+        
+    }
+    .displayFilesToUpload{
+        display: flex;
+        flex-direction: column;
+        align-items: center;        
+        min-height: 40vh;
+        margin-top: 3%;
+    }
+
+    /* Buttons styles start */
+    button {
+    display: inline-block;
+    border: none;
+    padding: 1rem 2rem;
+    margin: 0;
+    text-decoration: none;
+    background: #0069ed;
+    color: #ffffff;
+    font-family: sans-serif;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    }
+
+    button:hover,
+    button:focus {
+    background: #0053ba;
+    }
+
+    button:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+    }
+
+    button:active {
+    transform: scale(0.99);
+    }
+    
+     .container
+     {
+     width: 100%;
+     max-width: 680px; /* 800 */
+     text-align: center;
+     margin: 0 auto;
+     }
+
+     .container h1
+     {
+     font-size: 42px;
+     font-weight: 300;
+     color: #0f3c4b;
+     margin-bottom: 40px;
+     }
+     .container h1 a:hover,
+     .container h1 a:focus
+     {
+     color: #39bfd3;
+     }
+
+     .container nav
+     {
+     margin-bottom: 40px;
+     }
+     .container nav a
+     {
+     border-bottom: 2px solid #c8dadf;
+     display: inline-block;
+     padding: 4px 8px;
+     margin: 0 5px;
+     }
+     .container nav a.is-selected
+     {
+     font-weight: 700;
+     color: #39bfd3;
+     border-bottom-color: currentColor;
+     }
+     .container nav a:not( .is-selected ):hover,
+     .container nav a:not( .is-selected ):focus
+     {
+     border-bottom-color: #0f3c4b;
+     }
+
+     .container footer
+     {
+     color: #92b0b3;
+     margin-top: 40px;
+     }
+     .container footer p + p
+     {
+     margin-top: 1em;
+     }
+     .container footer a:hover,
+     .container footer a:focus
+     {
+     color: #39bfd3;
+     }
+
+     .box
+     {
+     font-size: 1.25rem; /* 20 */
+     background-color: #c8dadf;
+     position: relative;
+     padding: 100px 20px;
+     }
+     .box.has-advanced-upload
+     {
+     outline: 2px dashed #92b0b3;
+     outline-offset: -10px;
+
+     -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+     transition: outline-offset .15s ease-in-out, background-color .15s linear;
+     }
+     .box.is-dragover
+     {
+     outline-offset: -20px;
+     outline-color: #c8dadf;
+     background-color: #fff;
+     }
+     .box__dragndrop,
+     .box__icon
+     {
+        display: none;
+     }
+     .box.has-advanced-upload .box__dragndrop
+     {
+        display: inline;
+     }
+     .box.has-advanced-upload .box__icon
+     {
+     width: 100%;
+     height: 80px;
+     fill: #92b0b3;
+     display: block;
+     margin-bottom: 40px;
+     }
+
+     .box.is-uploading .box__input,
+     .box.is-success .box__input,
+     .box.is-error .box__input
+     {
+     visibility: hidden;
+     }
+
+     .box__uploading,
+     .box__success,
+     .box__error
+     {
+     display: none;
+     }
+     .box.is-uploading .box__uploading,
+     .box.is-success .box__success,
+     .box.is-error .box__error
+     {
+     display: block;
+     position: absolute;
+     top: 50%;
+     right: 0;
+     left: 0;
+
+     -webkit-transform: translateY( -50% );
+     transform: translateY( -50% );
+     }
+     .box__uploading
+     {
+     font-style: italic;
+     }
+     .box__success
+     {
+     -webkit-animation: appear-from-inside .25s ease-in-out;
+     animation: appear-from-inside .25s ease-in-out;
+     }
+     @-webkit-keyframes appear-from-inside
+     {
+     from { -webkit-transform: translateY( -50% ) scale( 0 ); }
+     75% { -webkit-transform: translateY( -50% ) scale( 1.1 ); }
+     to { -webkit-transform: translateY( -50% ) scale( 1 ); }
+     }
+     @keyframes appear-from-inside
+     {
+     from { transform: translateY( -50% ) scale( 0 ); }
+     75% { transform: translateY( -50% ) scale( 1.1 ); }
+     to { transform: translateY( -50% ) scale( 1 ); }
+     }
+
+     .box__restart
+     {
+     font-weight: 700;
+     }
+     .box__restart:focus,
+     .box__restart:hover
+     {
+     color: #39bfd3;
+     }
+
+     .js .box__file
+     {
+     width: 0.1px;
+     height: 0.1px;
+     opacity: 0;
+     overflow: hidden;
+     position: absolute;
+     z-index: -1;
+     }
+     .js .box__file + label
+     {
+     max-width: 80%;
+     text-overflow: ellipsis;
+     white-space: nowrap;
+     cursor: pointer;
+     display: inline-block;
+     overflow: hidden;
+     }
+     .js .box__file + label:hover strong,
+     .box__file:focus + label strong,
+     .box__file.has-focus + label strong
+     {
+     color: #39bfd3;
+     }
+     .js .box__file:focus + label,
+     .js .box__file.has-focus + label
+     {
+     outline: 1px dotted #000;
+     outline: -webkit-focus-ring-color auto 5px;
+     }
+     .js .box__file + label *
+     {
+     /* pointer-events: none; */ /* in case of FastClick lib use */
+     }
+
+     .no-js .box__file + label
+     {
+     display: none;
+     }
+
+     .no-js .box__button
+     {
+     display: block;
+     }
+     .box__button
+     {
+     font-weight: 700;
+     color: #e5edf1;
+     background-color: #39bfd3;
+     display: none;
+     padding: 8px 16px;
+     margin: 40px auto 0;
+     }
+     .box__button:hover,
+     .box__button:focus
+     {
+     background-color: #0f3c4b;
+     }
+
+     .mergeContainer{
+         width:100%;
+         background-color: #0f3c4b;
+     }
+     .merge{
+         width:100%;
+
+     }
+
+    .loading{
+        height:20%;
+        width:100%;
+        color:whitesmoke;
+        background-color: #007bff;
+        display:block;
+    }
+    .message{
+        height:20%;
+        width:100%;
+        color:whitesmoke;
+        background-color: #28a745;
+        display: block;
+    }
+    .error{
+        height:20%;
+        width:100%;
+        color:whitesmoke;
+        background-color: #dc3545;
+        display: block;
+    }
+    .msg{
+        padding: 2%;
+    }
+     #loading{
+        display:none;
+     }
+     #message{
+        display: none;
+     }
+     #error{
+        display: none;
+     }
+
+
+
+    
+</style>
+</head>
+<body>
+    <div class="navbar">
+        <h1 class="title">Pdf Merger</h1>
+    </div>
+    </br>
+    <div id="loading"><div class="msg">loading...</div></div>
+    <div id="message"><div class="msg">uploading Complete....</div></div>
+    <div id="error"><div class="msg">error occured while uploading,make sure internet connection is stable or you are not trying to upload 1 or less then 1
+    file.....</div></div> 
+    <div class="submit">
+         <form class="box" method="post" action="" enctype="multipart/form-data">
+             <div class="box__input">
+                
+                 <label for="file"><strong>Drag and</strong><span class="box__dragndrop"> drop it
+                         here</span>.</label>
+                 <button class="box__button" type="submit">Upload</button>
+             </div>
+             <div class="box__uploading">Uploading&hellip;</div>
+             <div class="box__success">Done!</div>
+             <div class="box__error">Error! <span></span>.</div>
+         </form>
+    </div>
+    
+    <div class="mergeContainer">
+        <button class="merge">merge</button>
+    </div>
+    
+    <div class="displayFilesToUpload">
+        <table id="table">
+            <tr class="header">
+                <td>Count</td>
+                <td>File</td>
+                <td>size </td>
+                <td>timeStamp </td>
+            </tr>
+
+        </table>
+    </div>
+    <script>
+        'use strict';
+         let selectedFile;
+         let rowCount = 0;
+         let list = [];//temporary cashing
+        // Initialize Firebase
+        var config = {
+        apiKey: "AIzaSyByGXa1C7S-X_kxkJqHP3ShNKwnF5caYic",
+        authDomain: "pdf-github.firebaseapp.com",
+        databaseURL: "https://pdf-github.firebaseio.com",
+        projectId: "pdf-github",
+        storageBucket: "pdf-github.appspot.com",
+        messagingSenderId: "582888951051"
+        };
+        firebase.initializeApp(config);
+
+        // Get a reference to the database service
+        var databaseref = firebase.database().ref();
+
+        // Create a root reference
+        var storageRef = firebase.storage().ref();
+
+         function writeUserData(file) {
+            console.log('the write data is called ..... ',file);
+            // var file = list[0];
+            // uploadFile(file,file.type)
+            //append the data to the list ot upload from the list
+            list.push(file);
+            addData(file);
+
+         }
+
+         var i = 0;
+         var uploaders = []
+         function onUploadComplete(x){
+            console.log('uploading....');
+            //create loaders to find out when all the uploads are completed
+            
+            for (i=0;i<list.length;i++){
+                var file = list[i];
+                uploaders.push(i);
+                uploadFile(file,file.type,x);
+                
+            }
+         }
+         //adding data to table....
+         function addData(selectedFile){
+            var table = document.getElementById("table");
+            var row = table.insertRow(row);
+            var cell0 = row.insertCell(0)
+            var cell1 = row.insertCell(1);
+            var cell2 = row.insertCell(2);
+            var cell3 = row.insertCell(3);
+            row.className += "header1";
+            cell0.innerHTML = rowCount;
+            cell1.innerHTML = selectedFile.name;
+            cell2.innerHTML = selectedFile.size;
+            cell3.innerHTML = selectedFile.type;
+            rowCount = rowCount + 1;
+         }
+
+         function uploadFile(file,type,x){
+            const metadata = {
+                contentType: type
+            };
+            const name = (+new Date()) + '-' + file.name;
+            const task = storageRef.child(name).put(file,metadata);
+            var strurl = "";
+            task
+            .then(snapshot => snapshot.ref.getDownloadURL())
+            .then((url) => {
+                console.log(url);
+                strurl = url;
+                databaseref.child('pdfs').child(uploaders.length).set({
+                user: 'anonomus',
+                pdfurl: url,
+            });
+                uploaders.pop();
+            
+            if(uploaders.length == 0){
+                console.log('upload completed ... ');
+                hideLoading(x);
+                showMessage();
+                startConversion();
+            }
+            //document.querySelector('#someImageTagID').src = url;
+            })
+                .catch(console.error);
+            }
+
+            function startConversion(){
+                console.log('start conversation is called');
+                $.ajax({
+                    url: '/merge',
+                    success: function (data) {
+                        console.log('get info');
+                        
+                    }
+                });
+            }
+            //listening to merge...
+            $('.merge').click(()=>{
+               /*  var x = showLoading();
+                if(list.length <2){
+                    console.log('cannot merge 1 or less then 1 file');
+                    hideLoading(x);
+                    showError();
+                }
+                else{
+                    console.log('merginggg....');
+                    onUploadComplete(x);
+                }  */
+                //testing errors and other alerts
+               // Alert();
+               startConversion();
+                
+            });
+
+            function Alert(){
+                //showLoading();
+                showError();
+                //showMessage();
+                //hideMessage();
+                //hideLoading();
+               // hideError();                
+            }
+            
+            function showLoading(){
+                
+                let x = document.getElementById('loading');
+                $(x).removeAttr('id').addClass("loading").addClass("w3-animate-top");
+               /*  setTimeout(function () {
+                    hideLoading(x);
+                }, 5000); */
+                return x;
+            }
+            function showError(){
+
+                let x = document.getElementById("error");
+                console.log(x);
+                $(x).removeAttr('id').addClass("error").addClass("w3-animate-top");
+                setTimeout(function () {
+                    hideError(x);
+                }, 5000);
+            }
+
+            function showMessage(){
+                let x = document.getElementById("message");
+                $(x).removeAttr('id').addClass("message").addClass("w3-animate-top");
+                setTimeout(function () { 
+                    hideMessage(x); 
+                    }, 5000);
+
+            }
+            function hideMessage(x){
+                console.log('hide is called');
+                console.log(x);
+                $(x).removeAttr('class').attr('id','message');
+                console.log(x);
+            }
+
+            function hideLoading(x) {
+                $(x).removeAttr('class').attr('id', 'loading');
+                
+            }
+            function hideError(x) {
+               $(x).removeAttr('class').attr('id', 'error');
+            }
+
+        (function (document, window, index) {
+            // feature detection for drag&drop upload
+            var isAdvancedUpload = function () {
+                var div = document.createElement('div');
+                return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in
+                    window && 'FileReader' in window;
+            }();
+
+
+            // applying the effect for every form
+            var forms = document.querySelectorAll('.box');
+            Array.prototype.forEach.call(forms, function (form) {
+                var label = form.querySelector('label'),
+                    errorMsg = form.querySelector('.box__error span'),
+                    restart = form.querySelectorAll('.box__restart'),
+                    droppedFiles = false,
+                    
+                    showFiles = function (files) {
+                        label.textContent = files[0].name;
+                    },
+                    triggerFormSubmit = function () {
+                        var event = document.createEvent('HTMLEvents');
+                        event.initEvent('submit', true, false);
+                        form.dispatchEvent(event);
+                    };
+
+                // drag&drop files if the feature is available
+                if (isAdvancedUpload) {
+                    form.classList.add(
+                        'has-advanced-upload'
+                        ); // letting the CSS part to know drag&drop is supported by the browser
+
+                    ['drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop'].forEach(
+                        function (event) {
+                            form.addEventListener(event, function (e) {
+                                // preventing the unwanted behaviours
+                                e.preventDefault();
+                                e.stopPropagation();
+                            });
+                        });
+                    ['dragover', 'dragenter'].forEach(function (event) {
+                        form.addEventListener(event, function () {
+                            form.classList.add('is-dragover');
+                        });
+                    });
+                    ['dragleave', 'dragend', 'drop'].forEach(function (event) {
+                        form.addEventListener(event, function () {
+                            form.classList.remove('is-dragover');
+                        });
+                    });
+                    form.addEventListener('drop', function (e) {
+                        droppedFiles = e.dataTransfer.files; // the files that were dropped
+                        showFiles(droppedFiles);
+                        triggerFormSubmit();
+
+                    });
+                }
+
+
+                // if the form was submitted
+                form.addEventListener('submit', function (e) {
+                    // preventing the duplicate submissions if the current one is in progress
+                    if (form.classList.contains('is-uploading')) return false;
+
+                    form.classList.add('is-uploading');
+                    form.classList.remove('is-error');
+
+                    if (isAdvancedUpload) // ajax file upload for modern browsers
+                    {
+                        e.preventDefault();
+
+                        // gathering the form data
+                        var ajaxData = new FormData(form);
+                        if (droppedFiles) {
+                            Array.prototype.forEach.call(droppedFiles, function (file) {
+                                console.log('got the data ', file);
+                                writeUserData(file);
+                                //ajaxData.append(input.getAttribute('name'), file);
+                                form.classList.remove('is-uploading');
+                            });
+                        }
+                    } else // fallback Ajax solution upload for older browsers
+                    {
+                        var iframeName = 'uploadiframe' + new Date().getTime(),
+                            iframe = document.createElement('iframe');
+
+                        $iframe = $('<iframe name="' + iframeName +
+                            '" style="display: none;"></iframe>');
+
+                        iframe.setAttribute('name', iframeName);
+                        iframe.style.display = 'none';
+
+                        document.body.appendChild(iframe);
+                        form.setAttribute('target', iframeName);
+
+                        iframe.addEventListener('load', function () {
+                            var data = JSON.parse(iframe.contentDocument.body.innerHTML);
+                            form.classList.remove('is-uploading')
+                            form.classList.add(data.success == true ? 'is-success' :
+                                'is-error')
+                            form.removeAttribute('target');
+                            if (!data.success) errorMsg.textContent = data.error;
+                            iframe.parentNode.removeChild(iframe);
+                        });
+                    }
+                });
+
+
+                // restart the form if has a state of error/success
+                Array.prototype.forEach.call(restart, function (entry) {
+                    entry.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        form.classList.remove('is-error', 'is-success');
+                       // input.click();
+                    });
+                });
+
+               
+
+            });
+        }(document, window, 0));
+    </script>
+
+</body>
+</html>
